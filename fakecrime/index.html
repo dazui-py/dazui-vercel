@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="daz · reverse engineering · linux · fakecrime">
+  <meta name="theme-color" content="#be0037">
+  <title>fakecrime.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23be0037'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%23ffdada'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Geist:wght@400..700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+
+      --md-sys-color-primary: #be0037;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #ffdada;
+      --md-sys-color-on-primary-container: #40000c;
+
+      --md-sys-color-secondary: #765657;
+      --md-sys-color-on-secondary: #ffffff;
+      --md-sys-color-secondary-container: #ffdada;
+      --md-sys-color-on-secondary-container: #2c1516;
+
+      --md-sys-color-tertiary: #76592f;
+      --md-sys-color-on-tertiary: #ffffff;
+      --md-sys-color-tertiary-container: #ffddb2;
+      --md-sys-color-on-tertiary-container: #291800;
+
+      --md-sys-color-error: #ba1a1a;
+      --md-sys-color-on-error: #ffffff;
+      --md-sys-color-error-container: #ffdad6;
+      --md-sys-color-on-error-container: #410002;
+
+      --md-sys-color-background: #fffbff;
+      --md-sys-color-on-background: #201a1a;
+      --md-sys-color-surface: #fff8f7;
+      --md-sys-color-on-surface: #201a1a;
+      --md-sys-color-surface-variant: #f4dddd;
+      --md-sys-color-on-surface-variant: #524343;
+      --md-sys-color-outline: #857373;
+      --md-sys-color-outline-variant: #d7c1c2;
+      --md-sys-color-shadow: #000000;
+      --md-sys-color-scrim: #000000;
+
+      --md-sys-color-inverse-surface: #362f2f;
+      --md-sys-color-inverse-on-surface: #fbeeed;
+      --md-sys-color-inverse-primary: #ffb3b6;
+      --md-sys-color-surface-dim: #e4d7d7;
+      --md-sys-color-surface-bright: #fff8f7;
+      --md-sys-color-surface-container-lowest: #ffffff;
+      --md-sys-color-surface-container-low: #fef1f0;
+      --md-sys-color-surface-container: #f8ebea;
+      --md-sys-color-surface-container-high: #f2e5e5;
+      --md-sys-color-surface-container-highest: #ece0df;
+
+      --md-sys-color-surface-tint: var(--md-sys-color-primary);
+
+      --md-sys-shape-corner-extra-small: 4px;
+      --md-sys-shape-corner-small: 8px;
+      --md-sys-shape-corner-medium: 12px;
+      --md-sys-shape-corner-large: 16px;
+      --md-sys-shape-corner-extra-large: 28px;
+      --md-sys-shape-corner-full: 9999px;
+
+      --md-ref-typeface-brand: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      --md-ref-typeface-plain: "Geist", "Segoe UI", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+
+      --sans: var(--md-ref-typeface-plain);
+
+      --status-online: #2da44e;
+      --status-idle: #e3b341;
+      --status-dnd: #e5484d;
+      --status-offline: #8b949e;
+      --status-color: var(--status-offline);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+
+        --md-sys-color-primary: #ffb3b6;
+        --md-sys-color-on-primary: #68001a;
+        --md-sys-color-primary-container: #920028;
+        --md-sys-color-on-primary-container: #ffdada;
+
+        --md-sys-color-secondary: #e6bdbe;
+        --md-sys-color-on-secondary: #44292b;
+        --md-sys-color-secondary-container: #5d3f40;
+        --md-sys-color-on-secondary-container: #ffdada;
+
+        --md-sys-color-tertiary: #e7c08d;
+        --md-sys-color-on-tertiary: #432c06;
+        --md-sys-color-tertiary-container: #5c421a;
+        --md-sys-color-on-tertiary-container: #ffddb2;
+
+        --md-sys-color-error: #ffb4ab;
+        --md-sys-color-on-error: #690005;
+        --md-sys-color-error-container: #93000a;
+        --md-sys-color-on-error-container: #ffb4ab;
+
+        --md-sys-color-background: #201a1a;
+        --md-sys-color-on-background: #ece0df;
+        --md-sys-color-surface: #181212;
+        --md-sys-color-on-surface: #ece0df;
+        --md-sys-color-surface-variant: #524343;
+        --md-sys-color-on-surface-variant: #d7c1c2;
+        --md-sys-color-outline: #9f8c8c;
+        --md-sys-color-outline-variant: #524343;
+        --md-sys-color-shadow: #000000;
+        --md-sys-color-scrim: #000000;
+
+        --md-sys-color-inverse-surface: #ece0df;
+        --md-sys-color-inverse-on-surface: #362f2f;
+        --md-sys-color-inverse-primary: #be0037;
+        --md-sys-color-surface-dim: #181212;
+        --md-sys-color-surface-bright: #3f3737;
+        --md-sys-color-surface-container-lowest: #120d0d;
+        --md-sys-color-surface-container-low: #201a1a;
+        --md-sys-color-surface-container: #241e1e;
+        --md-sys-color-surface-container-high: #2f2828;
+        --md-sys-color-surface-container-highest: #3a3333;
+
+        --status-online: #3fb950;
+        --status-idle: #d4a72c;
+        --status-dnd: #f85149;
+        --status-offline: #8b949e;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-background);
+      font-family: var(--sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+    :focus-visible { outline: 2px solid var(--md-sys-color-primary); outline-offset: 2px; }
+
+    .waves {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .wave {
+      position: absolute;
+      left: 0;
+      width: 130%;
+      height: 100%;
+      animation: waveDrift 26s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .wave svg { width: 100%; height: 100%; display: block; }
+
+    .wave.w1 { bottom: -28%; opacity: 0.5; animation-duration: 30s; }
+    .wave.w2 { bottom: -38%; opacity: 0.45; animation-duration: 24s; animation-direction: alternate-reverse; }
+    .wave.w3 { bottom: -48%; opacity: 0.3; animation-duration: 34s; }
+    .wave.w4 { bottom: -56%; opacity: 0.2; animation-duration: 20s; animation-direction: alternate-reverse; }
+
+    @keyframes waveDrift {
+      from { transform: translateX(-1.5%) translateY(0); }
+      to   { transform: translateX(1.5%) translateY(-1.5%); }
+    }
+
+    .blob {
+      position: fixed;
+      width: 60vmax;
+      height: 60vmax;
+      top: -18vmax;
+      right: -14vmax;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%,
+        color-mix(in srgb, var(--md-sys-color-primary) 9%, transparent),
+        transparent 70%);
+      animation: blobDrift 38s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes blobDrift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(-6vmax, 5vmax) scale(1.12); }
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      cursor: pointer;
+      background:
+        radial-gradient(120% 90% at 50% 110%,
+          color-mix(in srgb, var(--md-sys-color-primary-container) 55%, var(--md-sys-color-background)),
+          var(--md-sys-color-background) 70%);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+    }
+
+    .overlay.hide { opacity: 0; visibility: hidden; }
+
+    .overlay-wordmark {
+      font-family: var(--md-ref-typeface-brand);
+      font-weight: 700;
+      font-size: clamp(2.6rem, 9vw, 4rem);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--md-sys-color-on-background);
+    }
+
+    .overlay-wordmark .accent { color: var(--md-sys-color-primary); }
+
+    .overlay-hint {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--md-sys-color-on-surface-variant);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .overlay-hint .bar { animation: blink 1s steps(1) infinite; color: var(--md-sys-color-primary); }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .stage {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 14px;
+    }
+
+    .card {
+      position: relative;
+      width: min(432px, 100%);
+      background: var(--md-sys-color-surface-container-low);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--md-sys-shape-corner-extra-large);
+      padding: 36px 28px 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 6%, transparent),
+                  0 6px 24px color-mix(in srgb, var(--md-sys-color-shadow) 8%, transparent);
+      opacity: 0;
+      transform: translateY(18px) scale(0.985);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card.entered { opacity: 1; transform: none; }
+
+    .views-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: default;
+    }
+
+    .views-badge .mat { font-size: 1rem; color: var(--md-sys-color-primary); }
+
+    .views-badge:hover::after {
+      content: "profile views";
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      white-space: nowrap;
+      background: var(--md-sys-color-inverse-surface);
+      color: var(--md-sys-color-inverse-on-surface);
+      padding: 5px 10px;
+      border-radius: var(--md-sys-shape-corner-extra-small);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      margin-top: 10px;
+    }
+
+    .avatar-wrap .ring {
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-low), 0 0 0 4px var(--status-color);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .avatar {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 3px solid var(--md-sys-color-surface-container-low);
+    }
+
+    .status-dot {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--status-color);
+      border: 3px solid var(--md-sys-color-surface-container-low);
+      transition: background 0.3s ease;
+    }
+
+    .name {
+      margin: 16px 0 0;
+      font-family: var(--md-ref-typeface-brand);
+      font-weight: 700;
+      font-size: 1.75rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .handle {
+      margin: 2px 0 0;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .tabs {
+      position: relative;
+      width: 100%;
+      display: flex;
+      gap: 4px;
+      margin-top: 20px;
+      padding: 4px;
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--md-sys-shape-corner-full);
+    }
+
+    .tab-thumb {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: 96px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-primary-container);
+      box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-shadow) 20%, transparent);
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform, width;
+    }
+
+    .tab {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      padding: 8px 0;
+      border-radius: var(--md-sys-shape-corner-full);
+      font-family: var(--md-ref-typeface-plain);
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--md-sys-color-on-surface-variant);
+      transition: color 0.2s ease, transform 0.15s ease;
+      min-height: 40px;
+    }
+
+    .tab:hover { color: var(--md-sys-color-on-surface); }
+
+    .tab:active { transform: scale(0.97); }
+
+    .tab.active { color: var(--md-sys-color-on-primary-container); }
+
+    .tab-panel {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .tab-panel[hidden] { display: none; }
+
+    .greeting {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 14px 0 0;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .greet-gif {
+      width: 26px;
+      height: 26px;
+      border-radius: var(--md-sys-shape-corner-extra-small);
+      object-fit: cover;
+      vertical-align: middle;
+    }
+
+    .greet-sub {
+      margin: 4px 0 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .dc-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .dc-status .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--status-color);
+      transition: background 0.3s ease;
+    }
+
+    .dc-sub {
+      margin-top: 2px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .dc-bio {
+      margin: 14px auto 0;
+      max-width: 340px;
+      text-align: center;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .dc-bio strong { color: var(--md-sys-color-on-surface); font-weight: 600; }
+
+    .spoiler-row { text-align: center; }
+
+    .spoiler {
+      display: inline-block;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-primary-container);
+      border: 1px solid color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+      color: var(--md-sys-color-on-primary-container);
+      padding: 1px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .spoiler .inner {
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .spoiler:hover .inner,
+    .spoiler:focus-visible .inner,
+    .spoiler.revealed .inner {
+      opacity: 1;
+      text-shadow: 0 0 10px color-mix(in srgb, var(--md-sys-color-primary) 60%, transparent);
+    }
+
+    .dc-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--md-sys-color-outline-variant);
+      margin: 16px 0;
+    }
+
+    .dc-tools {
+      margin-top: 18px;
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+      padding-top: 14px;
+      text-align: center;
+    }
+
+    .dc-tools .tools-line {
+      margin: 0 0 8px;
+      font-size: 0.85rem;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .dc-tools .tool-line {
+      margin: 3px 0;
+      font-size: 0.82rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .tool-line a {
+      color: var(--md-sys-color-primary);
+      text-decoration: none;
+    }
+
+    .tool-line a:hover { text-decoration: underline; }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .activity .thumb {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--md-sys-shape-corner-small);
+      object-fit: cover;
+      background: var(--md-sys-color-surface-container-high);
+      flex: none;
+    }
+
+    .activity .meta { min-width: 0; flex: 1; }
+
+    .activity .act-type {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--md-sys-color-tertiary);
+    }
+
+    .activity .act-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity .act-detail {
+      font-size: 0.78rem;
+      color: var(--md-sys-color-on-surface-variant);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity .act-progress {
+      margin-top: 8px;
+      height: 4px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-surface-container-highest);
+      overflow: hidden;
+    }
+
+    .activity .act-progress .fill {
+      height: 100%;
+      width: 0;
+      background: var(--md-sys-color-primary);
+      transition: width 1s linear;
+    }
+
+    .activity .act-times {
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .dc-note {
+      margin-top: 12px;
+      font-size: 0.72rem;
+      color: var(--md-sys-color-on-surface-variant);
+      text-align: center;
+    }
+
+    .dc-note a { color: var(--md-sys-color-primary); text-decoration: none; }
+    .dc-note a:hover { text-decoration: underline; }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+      width: 100%;
+    }
+
+    .icon-link {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--md-sys-shape-corner-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      color: var(--md-sys-color-on-surface-variant);
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .icon-link svg { width: 22px; height: 22px; }
+
+    .icon-link:hover {
+      background: var(--md-sys-color-primary-container);
+      border-color: color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent);
+      color: var(--md-sys-color-on-primary-container);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent);
+    }
+
+    .icon-link:active { transform: scale(0.96); }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--md-sys-color-outline-variant);
+      margin: 24px 0 20px;
+    }
+
+    .song {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .song .cover {
+      width: 62px;
+      height: 62px;
+      border-radius: var(--md-sys-shape-corner-medium);
+      object-fit: cover;
+      flex: none;
+      background: var(--md-sys-color-surface-container-high);
+    }
+
+    .song .meta { flex: 1; min-width: 0; }
+
+    .song .title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song .artist {
+      font-size: 0.78rem;
+      color: var(--md-sys-color-on-surface-variant);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .play-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--md-sys-shape-corner-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+      transition: transform 0.2s ease, filter 0.2s ease;
+      flex: none;
+    }
+
+    .play-btn:hover { filter: brightness(1.06); transform: scale(1.05); }
+    .play-btn:active { transform: scale(0.95); }
+
+    .play-btn .mat { font-size: 1.6rem; }
+
+    .player-track {
+      width: 100%;
+      margin-top: 14px;
+      height: 4px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-surface-container-highest);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .player-track .fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      border-radius: inherit;
+      background: var(--md-sys-color-primary);
+    }
+
+    .player-track .thumb {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--md-sys-color-on-surface);
+      border: 2px solid var(--md-sys-color-primary);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .player-track:hover .thumb { opacity: 1; }
+
+    .player-times {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .mail-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+      padding: 10px 20px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+
+    .mail-link .mat { font-size: 1rem; }
+
+    .mail-link { cursor: pointer; }
+
+    .mail-link:hover { filter: brightness(0.97); transform: translateY(-1px); }
+    .mail-link:active { transform: scale(0.98); }
+
+    .mail-link.copied {
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    .foot {
+      margin: 18px 0 0;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--md-sys-color-on-surface-variant);
+      opacity: 0.85;
+    }
+
+    .foot .dot-sep { opacity: 0.5; }
+
+    .foot a { color: var(--md-sys-color-primary); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+
+    @media (max-width: 440px) {
+      .card { padding: 32px 20px 22px; }
+      .avatar { width: 92px; height: 92px; }
+      .tab { padding: 8px 22px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .card { opacity: 1; transform: none; }
+      .overlay { transition: opacity 0.15s; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blob" aria-hidden="true"></div>
+  <div class="waves" aria-hidden="true">
+    <div class="wave w1">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="var(--md-sys-color-surface-container-highest)"
+              d="M0,224 C120,176 240,288 360,256 C480,224 540,128 720,144 C900,160 1020,272 1140,256 C1260,240 1380,176 1440,192 L1440,320 L0,320 Z"/>
+      </svg>
+    </div>
+    <div class="wave w2">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="var(--md-sys-color-surface-container)"
+              d="M0,240 C160,304 320,192 480,208 C640,224 800,288 960,272 C1120,256 1280,192 1440,224 L1440,320 L0,320 Z"/>
+      </svg>
+    </div>
+    <div class="wave w3">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="var(--md-sys-color-primary-container)"
+              d="M0,256 C200,208 400,304 600,288 C800,272 1000,208 1200,240 C1320,256 1380,288 1440,272 L1440,320 L0,320 Z"/>
+      </svg>
+    </div>
+    <div class="wave w4">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="var(--md-sys-color-tertiary-container)"
+              d="M0,288 C240,256 480,312 720,296 C960,280 1200,240 1440,272 L1440,320 L0,320 Z"/>
+      </svg>
+    </div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="overlay" id="overlay" role="button" tabindex="0" aria-label="Enter site">
+    <div class="overlay-wordmark">dazuii<span class="accent">.</span></div>
+    <div class="overlay-hint">CLICK ME <span class="bar">>.<</span></div>
+  </div>
+
+  <main class="stage">
+    <div class="card" id="card">
+      <div class="views-badge" id="viewsBadge" title="profile views">
+        <span class="material-symbols-outlined mat">visibility</span>
+        <span id="viewsCount">—</span>
+      </div>
+
+      <div class="avatar-wrap">
+        <div class="ring"></div>
+        <img class="avatar" src="https://github.com/dazui-py.png" alt="dazui-py profile picture" width="104" height="104">
+        <div class="status-dot" id="statusDot"></div>
+      </div>
+
+      <h1 class="name">daz</h1>
+      <p class="handle">@dazui-py</p>
+
+      <p class="greeting">Hii! <img class="greet-gif" src="assets/linux.gif" alt="linux" width="26" height="26"></p>
+      <p class="greet-sub">welcome to my page, make yourself at home</p>
+
+      <div class="tabs" id="tabs" role="tablist" aria-label="Profile sections">
+        <div class="tab-thumb" id="tabThumb" aria-hidden="true"></div>
+        <button class="tab active" id="tabBioBtn" role="tab" aria-selected="true" aria-controls="tab-bio">Bio</button>
+        <button class="tab" id="tabDiscordBtn" role="tab" aria-selected="false" aria-controls="tab-discord">Discord</button>
+      </div>
+
+      <section class="tab-panel" id="tab-bio" role="tabpanel" aria-labelledby="tabBioBtn">
+        <p class="dc-bio">
+          I'm a 15yo male (even tho I larp being a female most of the times lol), and I'm mostly
+          online on discord. Also, I code in C/C++. Languages I speak: Portuguese (Native), English,
+          French (A2), and a moldy Russian (havent praticed for years btw)
+        </p>
+        <p class="dc-bio spoiler-row">
+          <span class="spoiler" id="spoilerBtn" role="button" tabindex="0" aria-label="Reveal hidden text">
+            <span class="inner">(I use Arch btw)</span>
+          </span>
+        </p>
+      </section>
+
+      <section class="tab-panel" id="tab-discord" role="tabpanel" aria-labelledby="tabDiscordBtn" hidden>
+        <div id="dcPresence">
+          <div class="dc-status"><span class="dot"></span><span id="statusLabel">…</span></div>
+          <div class="dc-sub" id="statusSub"></div>
+          <div class="dc-divider"></div>
+          <div class="activity" id="activity">
+            <img class="thumb" id="actThumb" alt="" hidden>
+            <div class="meta">
+              <div class="act-type" id="actType">discord</div>
+              <div class="act-title" id="actTitle"></div>
+              <div class="act-detail" id="actDetail"></div>
+              <div class="act-progress" id="actProgress" hidden><div class="fill" id="actFill"></div></div>
+              <div class="act-times" id="actTimes" hidden></div>
+            </div>
+          </div>
+          <p class="dc-note" id="dcNote" hidden>live presence needs Lanyard — <a href="https://discord.gg/lanyard" target="_blank" rel="noopener noreferrer">join discord.gg/lanyard</a></p>
+        </div>
+
+        <div class="dc-tools">
+          <p class="tools-line">I use Neovim btw.</p>
+          <p class="tool-line">👋 <a href="https://nohello.net/en" target="_blank" rel="noopener noreferrer">nohello.net/en</a></p>
+          <p class="tool-line">🚫 <a href="https://dontasktoask.com/" target="_blank" rel="noopener noreferrer">dontasktoask.com</a></p>
+        </div>
+      </section>
+
+      <div class="links">
+        <a class="icon-link" href="https://github.com/dazui-py" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+        <a class="icon-link" href="https://discord.com/users/1229788643049209958" target="_blank" rel="noopener noreferrer" aria-label="Discord" title="Discord">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="song">
+        <img class="cover" src="assets/rr_but_lofi.webp" alt="Rickroll But It's Lofi cover" width="62" height="62">
+        <div class="meta">
+          <div class="title">Rickroll But It's Lofi</div>
+          <div class="artist">KCFM</div>
+        </div>
+        <button class="play-btn" id="playBtn" aria-label="Play Rickroll But It's Lofi">
+          <span class="material-symbols-outlined mat" id="playIcon">play_arrow</span>
+        </button>
+      </div>
+      <div class="player-track" id="playerTrack" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+        <div class="fill" id="trackFill"></div>
+        <div class="thumb" id="trackThumb"></div>
+      </div>
+      <div class="player-times">
+        <span id="tCur">0:00</span>
+        <span id="tDur">0:00</span>
+      </div>
+
+      <button class="mail-link" id="mailBtn" aria-label="Copy email dazuii@duck.com" title="Click to copy">
+        <span class="material-symbols-outlined mat" id="mailIcon">mail</span>
+        <span id="mailLabel">dazuii@duck.com</span>
+      </button>
+
+      <p class="foot">
+        © <span id="year"></span> fakecrime
+        <span class="dot-sep">·</span> <a href="https://github.com/dazui-py" target="_blank" rel="noopener noreferrer">@dazui-py</a>
+      </p>
+    </div>
+  </main>
+
+  <script>
+    const DISCORD_ID = "1229788643049209958";
+    const VIEWS_API = "https://fakecrime-views.api-dazviews.workers.dev";
+
+    const overlay = document.getElementById("overlay");
+    const card = document.getElementById("card");
+    const audio = new Audio("assets/rickroll-lofi.m4a");
+    audio.preload = "auto";
+
+    function enter() {
+      overlay.classList.add("hide");
+      card.classList.add("entered");
+      audio.play().catch(() => {});
+    }
+    overlay.addEventListener("click", enter);
+    overlay.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); enter(); } });
+
+    const tabBioBtn = document.getElementById("tabBioBtn");
+    const tabDiscordBtn = document.getElementById("tabDiscordBtn");
+    const panelBio = document.getElementById("tab-bio");
+    const panelDiscord = document.getElementById("tab-discord");
+    const tabThumb = document.getElementById("tabThumb");
+    let activeTabBtn = tabBioBtn;
+
+    function positionThumb(btn) {
+      activeTabBtn = btn;
+      tabThumb.style.width = btn.offsetWidth + "px";
+      tabThumb.style.transform = "translateX(" + (btn.offsetLeft - 4) + "px)";
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => positionThumb(activeTabBtn));
+    }
+    requestAnimationFrame(() => positionThumb(activeTabBtn));
+    window.addEventListener("resize", () => positionThumb(activeTabBtn));
+
+    function switchTab(name) {
+      const bio = name === "bio";
+      tabBioBtn.classList.toggle("active", bio);
+      tabDiscordBtn.classList.toggle("active", !bio);
+      tabBioBtn.setAttribute("aria-selected", String(bio));
+      tabDiscordBtn.setAttribute("aria-selected", String(!bio));
+      panelBio.hidden = !bio;
+      panelDiscord.hidden = bio;
+      positionThumb(bio ? tabBioBtn : tabDiscordBtn);
+    }
+    tabBioBtn.addEventListener("click", () => switchTab("bio"));
+    tabDiscordBtn.addEventListener("click", () => switchTab("discord"));
+
+    const viewsCountEl = document.getElementById("viewsCount");
+    const SESSION_KEY = "fakecrime_viewed_session";
+    const LOCAL_KEY = "fakecrime_views_local";
+
+    function localCounter() {
+      let n = parseInt(localStorage.getItem(LOCAL_KEY) || "0", 10) || 0;
+      if (!sessionStorage.getItem(SESSION_KEY)) {
+        sessionStorage.setItem(SESSION_KEY, "1");
+        n += 1;
+        localStorage.setItem(LOCAL_KEY, String(n));
+      }
+      return n;
+    }
+
+    function renderViews(n) {
+      if (!Number.isFinite(n)) return false;
+      viewsCountEl.textContent = n.toLocaleString("en-US");
+      return true;
+    }
+
+    (async function initViews() {
+      if (VIEWS_API) {
+        try {
+          const firstVisit = !sessionStorage.getItem(SESSION_KEY);
+          const res = await fetch(VIEWS_API + "/hit?page=fakecrime", {
+            method: firstVisit ? "POST" : "GET",
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (renderViews(data.count)) {
+              if (firstVisit) sessionStorage.setItem(SESSION_KEY, "1");
+              return;
+            }
+          }
+        } catch (e) {}
+      }
+      renderViews(localCounter());
+    })();
+
+    const playBtn = document.getElementById("playBtn");
+    const playIcon = document.getElementById("playIcon");
+    const trackFill = document.getElementById("trackFill");
+    const trackThumb = document.getElementById("trackThumb");
+    const trackEl = document.getElementById("playerTrack");
+    const tCur = document.getElementById("tCur");
+    const tDur = document.getElementById("tDur");
+
+    function fmt(s) {
+      if (!isFinite(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ":" + String(sec).padStart(2, "0");
+    }
+
+    function sync() {
+      const d = audio.duration || 0;
+      const c = audio.currentTime || 0;
+      const p = d ? (c / d) * 100 : 0;
+      trackFill.style.width = p + "%";
+      trackThumb.style.left = p + "%";
+      tCur.textContent = fmt(c);
+      if (d) tDur.textContent = fmt(d);
+      trackEl.setAttribute("aria-valuenow", String(Math.round(p)));
+    }
+
+    playBtn.addEventListener("click", () => {
+      if (audio.paused) { audio.play(); } else { audio.pause(); }
+    });
+
+    audio.addEventListener("play", () => {
+      playIcon.textContent = "pause";
+      playBtn.setAttribute("aria-label", "Pause Rickroll But It's Lofi");
+    });
+    audio.addEventListener("pause", () => {
+      playIcon.textContent = "play_arrow";
+      playBtn.setAttribute("aria-label", "Play Rickroll But It's Lofi");
+    });
+    audio.addEventListener("ended", () => { audio.currentTime = 0; sync(); });
+    audio.addEventListener("timeupdate", sync);
+    audio.addEventListener("loadedmetadata", sync);
+
+    trackEl.addEventListener("click", (e) => {
+      const rect = trackEl.getBoundingClientRect();
+      const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      if (audio.duration) {
+        audio.currentTime = ratio * audio.duration;
+        sync();
+      }
+    });
+
+    trackEl.addEventListener("keydown", (e) => {
+      if (!audio.duration) return;
+      const step = audio.duration / 20;
+      if (e.key === "ArrowRight") { e.preventDefault(); audio.currentTime = Math.min(audio.duration, audio.currentTime + step); sync(); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); audio.currentTime = Math.max(0, audio.currentTime - step); sync(); }
+    });
+
+    const statusLabel = document.getElementById("statusLabel");
+    const statusSub = document.getElementById("statusSub");
+    const activity = document.getElementById("activity");
+    const dcPresence = document.getElementById("dcPresence");
+    const dcNote = document.getElementById("dcNote");
+    const actThumb = document.getElementById("actThumb");
+    const actType = document.getElementById("actType");
+    const actTitle = document.getElementById("actTitle");
+    const actDetail = document.getElementById("actDetail");
+    const actProgress = document.getElementById("actProgress");
+    const actFill = document.getElementById("actFill");
+    const actTimes = document.getElementById("actTimes");
+
+    const STATUS_META = {
+      online:  { label: "online",  color: "var(--status-online)"  },
+      idle:    { label: "idle",    color: "var(--status-idle)"    },
+      dnd:     { label: "dnd",     color: "var(--status-dnd)"     },
+      offline: { label: "offline", color: "var(--status-offline)" },
+    };
+
+    let activityTimer = null;
+
+    function fmtClock(ms) {
+      return fmt(Math.max(0, Math.floor(ms / 1000)));
+    }
+
+    function hasActivity(d) {
+      return !!(d.spotify || (d.activities || []).some((a) => a.type === 4 || [0, 1, 2, 3, 5].includes(a.type)));
+    }
+
+    function renderActivity(d) {
+      clearInterval(activityTimer);
+      activityTimer = null;
+
+      let customText = "";
+      const custom = (d.activities || []).find((a) => a.type === 4);
+      if (custom) customText = (custom.emoji && custom.emoji.name ? custom.emoji.name + " " : "") + (custom.state || "");
+
+      if (!hasActivity(d)) {
+        dcPresence.hidden = true;
+        return;
+      }
+
+      dcPresence.hidden = false;
+
+      if (d.spotify) {
+        const sp = d.spotify;
+        actThumb.hidden = false;
+        actThumb.src = sp.album_art_url;
+        actType.textContent = "listening to spotify";
+        actTitle.textContent = sp.song;
+        actDetail.textContent = sp.artist;
+        actProgress.hidden = false;
+        actTimes.hidden = false;
+        const paint = () => {
+          const total = sp.timestamps.end - sp.timestamps.start;
+          const elapsed = Date.now() - sp.timestamps.start;
+          const pct = total > 0 ? Math.min(100, Math.max(0, (elapsed / total) * 100)) : 0;
+          actFill.style.width = pct + "%";
+          actTimes.innerHTML = "<span>" + fmtClock(elapsed) + "</span><span>" + fmtClock(total) + "</span>";
+        };
+        paint();
+        activityTimer = setInterval(paint, 1000);
+        return;
+      }
+
+      const main = (d.activities || []).find((a) => [0, 1, 2, 3, 5].includes(a.type)) || null;
+      if (!main) {
+        actThumb.hidden = true;
+        actType.textContent = "discord";
+        actTitle.textContent = customText || "custom status";
+        actDetail.textContent = "";
+        actProgress.hidden = true;
+        actTimes.hidden = true;
+        return;
+      }
+
+      actThumb.hidden = true;
+      if (main.assets && main.assets.large_image && main.application_id &&
+          String(main.assets.large_image).indexOf("mp:") !== 0) {
+        const url = "https://cdn.discordapp.com/app-assets/" + main.application_id + "/" + main.assets.large_image + ".png?size=128";
+        const probe = new Image();
+        probe.onload = () => { actThumb.hidden = false; actThumb.src = url; };
+        probe.src = url;
+      }
+
+      const TYPE_LABEL = { 0: "playing", 1: "streaming", 2: "listening to", 3: "watching", 5: "competing in" };
+      actType.textContent = TYPE_LABEL[main.type] || "playing";
+      actTitle.textContent = main.name;
+      actDetail.textContent = [main.details, main.state, customText].filter(Boolean).join(" · ");
+
+      if (main.timestamps && main.timestamps.start) {
+        actProgress.hidden = false;
+        actTimes.hidden = false;
+        const end = main.timestamps.end;
+        const paint = () => {
+          const elapsed = Date.now() - main.timestamps.start;
+          if (end) {
+            const total = end - main.timestamps.start;
+            const pct = total > 0 ? Math.min(100, Math.max(0, (elapsed / total) * 100)) : 0;
+            actFill.style.width = pct + "%";
+            actTimes.innerHTML = "<span>" + fmtClock(elapsed) + "</span><span>" + fmtClock(total) + "</span>";
+          } else {
+            actFill.style.width = "100%";
+            actTimes.innerHTML = "<span>" + fmtClock(elapsed) + "</span><span></span>";
+          }
+        };
+        paint();
+        activityTimer = setInterval(paint, 1000);
+      } else {
+        actProgress.hidden = true;
+        actTimes.hidden = true;
+      }
+    }
+
+    function applyPresence(d) {
+      if (!d || !d.discord_user) { renderNotMonitored(); return; }
+
+      const meta = STATUS_META[d.discord_status] || STATUS_META.offline;
+      document.documentElement.style.setProperty("--status-color", meta.color);
+      statusLabel.textContent = meta.label;
+      statusSub.textContent = d.active_on_discord_desktop ? "on desktop" : (d.active_on_discord_mobile ? "on mobile" : "");
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", meta.color);
+      dcNote.hidden = true;
+
+      renderActivity(d);
+    }
+
+    function renderNotMonitored() {
+      clearInterval(activityTimer);
+      activityTimer = null;
+      document.documentElement.style.setProperty("--status-color", "var(--status-offline)");
+      statusLabel.textContent = "offline";
+      statusSub.textContent = "";
+      activity.hidden = true;
+      dcPresence.hidden = false;
+      dcNote.hidden = false;
+    }
+
+    fetch("https://api.lanyard.rest/v1/users/" + DISCORD_ID)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) applyPresence(json.data);
+        else renderNotMonitored();
+      })
+      .catch(() => renderNotMonitored());
+
+    let ws = null, heartbeatTimer = null, resubTimer = null;
+
+    function connectWS() {
+      if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+      try { ws = new WebSocket("wss://api.lanyard.rest/socket"); } catch (e) { return; }
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+        resubTimer = setInterval(() => {
+          if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+          }
+        }, 30000);
+      };
+
+      ws.onmessage = (e) => {
+        let msg;
+        try { msg = JSON.parse(e.data); } catch (_) { return; }
+        if (msg.op === 0) {
+          const interval = (msg.d && msg.d.heartbeat_interval) || 30000;
+          clearInterval(heartbeatTimer);
+          heartbeatTimer = setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
+          }, interval);
+        } else if (msg.op === 1) {
+          if (msg.t === "INIT_STATE") applyPresence(msg.d);
+          else if (msg.t === "PRESENCE_UPDATE") applyPresence(msg.d);
+        } else if (msg.op === 2 && msg.t === "error") {
+          renderNotMonitored();
+        }
+      };
+
+      ws.onclose = () => {
+        clearInterval(heartbeatTimer);
+        clearInterval(resubTimer);
+        setTimeout(connectWS, 6000);
+      };
+
+      ws.onerror = () => { try { ws.close(); } catch (_) {} };
+    }
+    connectWS();
+
+    const spoiler = document.getElementById("spoilerBtn");
+    function toggleSpoiler() {
+      const revealed = spoiler.classList.toggle("revealed");
+      spoiler.setAttribute("aria-label", revealed ? "Hide hidden text" : "Reveal hidden text");
+    }
+    spoiler.addEventListener("click", toggleSpoiler);
+    spoiler.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSpoiler(e); }
+    });
+
+    const mailBtn = document.getElementById("mailBtn");
+    const mailLabel = document.getElementById("mailLabel");
+    const mailIcon = document.getElementById("mailIcon");
+    const EMAIL = "dazuii@duck.com";
+    let mailTimer = null;
+
+    mailBtn.addEventListener("click", async () => {
+      const done = () => {
+        mailBtn.classList.add("copied");
+        mailLabel.textContent = "copied!";
+        mailIcon.textContent = "check";
+        clearTimeout(mailTimer);
+        mailTimer = setTimeout(() => {
+          mailBtn.classList.remove("copied");
+          mailLabel.textContent = EMAIL;
+          mailIcon.textContent = "mail";
+        }, 1600);
+      };
+
+      try {
+        await navigator.clipboard.writeText(EMAIL);
+        done();
+      } catch (err) {
+        const ta = document.createElement("textarea");
+        ta.value = EMAIL;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); done(); } catch (_) {}
+        ta.remove();
+      }
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
