@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="dazuii, developer. C/C++, linux, reverse engineering.">
+  <title>dazuii</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Geist:wght@400..700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+
+      --md-sys-color-primary: #be0037;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #ffdada;
+      --md-sys-color-on-primary-container: #40000c;
+
+      --md-sys-color-secondary: #765657;
+      --md-sys-color-on-secondary: #ffffff;
+      --md-sys-color-secondary-container: #ffdada;
+      --md-sys-color-on-secondary-container: #2c1516;
+
+      --md-sys-color-tertiary: #76592f;
+      --md-sys-color-on-tertiary: #ffffff;
+      --md-sys-color-tertiary-container: #ffddb2;
+      --md-sys-color-on-tertiary-container: #291800;
+
+      --md-sys-color-error: #ba1a1a;
+      --md-sys-color-on-error: #ffffff;
+      --md-sys-color-error-container: #ffdad6;
+      --md-sys-color-on-error-container: #410002;
+
+      --md-sys-color-background: #fffbff;
+      --md-sys-color-on-background: #201a1a;
+      --md-sys-color-surface: #fff8f7;
+      --md-sys-color-on-surface: #201a1a;
+      --md-sys-color-surface-variant: #f4dddd;
+      --md-sys-color-on-surface-variant: #524343;
+      --md-sys-color-outline: #857373;
+      --md-sys-color-outline-variant: #d7c1c2;
+      --md-sys-color-shadow: #000000;
+      --md-sys-color-scrim: #000000;
+
+      --md-sys-color-inverse-surface: #362f2f;
+      --md-sys-color-inverse-on-surface: #fbeeed;
+      --md-sys-color-inverse-primary: #ffb3b6;
+      --md-sys-color-surface-dim: #e4d7d7;
+      --md-sys-color-surface-bright: #fff8f7;
+      --md-sys-color-surface-container-lowest: #ffffff;
+      --md-sys-color-surface-container-low: #fef1f0;
+      --md-sys-color-surface-container: #f8ebea;
+      --md-sys-color-surface-container-high: #f2e5e5;
+      --md-sys-color-surface-container-highest: #ece0df;
+
+      --md-sys-color-surface-tint: var(--md-sys-color-primary);
+
+      --md-sys-shape-corner-extra-small: 4px;
+      --md-sys-shape-corner-small: 8px;
+      --md-sys-shape-corner-medium: 12px;
+      --md-sys-shape-corner-large: 16px;
+      --md-sys-shape-corner-extra-large: 28px;
+      --md-sys-shape-corner-full: 9999px;
+
+      --md-ref-typeface-brand: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      --md-ref-typeface-plain: "Geist", "Segoe UI", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+
+      --md-sys-typescale-display-large-font: var(--md-ref-typeface-brand);
+      --md-sys-typescale-display-large-weight: 700;
+      --md-sys-typescale-display-large-size: clamp(3rem, 9vw, 4.8rem);
+      --md-sys-typescale-display-large-line-height: 1;
+
+      --md-sys-typescale-headline-small-font: var(--md-ref-typeface-brand);
+      --md-sys-typescale-headline-small-weight: 600;
+      --md-sys-typescale-headline-small-size: 1.375rem;
+      --md-sys-typescale-headline-small-line-height: 1.75rem;
+
+      --md-sys-typescale-headline-medium-font: var(--md-ref-typeface-brand);
+      --md-sys-typescale-headline-medium-weight: 700;
+      --md-sys-typescale-headline-medium-size: 1.75rem;
+      --md-sys-typescale-headline-medium-line-height: 2.25rem;
+
+      --md-sys-typescale-title-medium-font: var(--mono);
+      --md-sys-typescale-title-medium-weight: 700;
+      --md-sys-typescale-title-medium-size: 1rem;
+      --md-sys-typescale-title-medium-line-height: 1.5rem;
+
+      --md-sys-typescale-label-large-font: var(--md-ref-typeface-plain);
+      --md-sys-typescale-label-large-weight: 500;
+      --md-sys-typescale-label-large-size: 0.875rem;
+      --md-sys-typescale-label-large-line-height: 1.25rem;
+
+      --md-sys-typescale-label-medium-font: var(--mono);
+      --md-sys-typescale-label-medium-weight: 700;
+      --md-sys-typescale-label-medium-size: 0.75rem;
+      --md-sys-typescale-label-medium-line-height: 1rem;
+
+      --md-sys-typescale-body-large-font: var(--md-ref-typeface-plain);
+      --md-sys-typescale-body-large-weight: 400;
+      --md-sys-typescale-body-large-size: 1.0625rem;
+      --md-sys-typescale-body-large-line-height: 1.7rem;
+
+      --md-sys-typescale-body-medium-font: var(--md-ref-typeface-plain);
+      --md-sys-typescale-body-medium-weight: 400;
+      --md-sys-typescale-body-medium-size: 0.875rem;
+      --md-sys-typescale-body-medium-line-height: 1.25rem;
+
+      --md-sys-typescale-body-small-font: var(--md-ref-typeface-plain);
+      --md-sys-typescale-body-small-weight: 400;
+      --md-sys-typescale-body-small-size: 0.8125rem;
+      --md-sys-typescale-body-small-line-height: 1rem;
+
+      --sans: var(--md-ref-typeface-plain);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+
+        --md-sys-color-primary: #ffb3b6;
+        --md-sys-color-on-primary: #68001a;
+        --md-sys-color-primary-container: #920028;
+        --md-sys-color-on-primary-container: #ffdada;
+
+        --md-sys-color-secondary: #e6bdbe;
+        --md-sys-color-on-secondary: #44292b;
+        --md-sys-color-secondary-container: #5d3f40;
+        --md-sys-color-on-secondary-container: #ffdada;
+
+        --md-sys-color-tertiary: #e7c08d;
+        --md-sys-color-on-tertiary: #432c06;
+        --md-sys-color-tertiary-container: #5c421a;
+        --md-sys-color-on-tertiary-container: #ffddb2;
+
+        --md-sys-color-error: #ffb4ab;
+        --md-sys-color-on-error: #690005;
+        --md-sys-color-error-container: #93000a;
+        --md-sys-color-on-error-container: #ffb4ab;
+
+        --md-sys-color-background: #201a1a;
+        --md-sys-color-on-background: #ece0df;
+        --md-sys-color-surface: #181212;
+        --md-sys-color-on-surface: #ece0df;
+        --md-sys-color-surface-variant: #524343;
+        --md-sys-color-on-surface-variant: #d7c1c2;
+        --md-sys-color-outline: #9f8c8c;
+        --md-sys-color-outline-variant: #524343;
+        --md-sys-color-shadow: #000000;
+        --md-sys-color-scrim: #000000;
+
+        --md-sys-color-inverse-surface: #ece0df;
+        --md-sys-color-inverse-on-surface: #362f2f;
+        --md-sys-color-inverse-primary: #be0037;
+        --md-sys-color-surface-dim: #181212;
+        --md-sys-color-surface-bright: #3f3737;
+        --md-sys-color-surface-container-lowest: #120d0d;
+        --md-sys-color-surface-container-low: #201a1a;
+        --md-sys-color-surface-container: #241e1e;
+        --md-sys-color-surface-container-high: #2f2828;
+        --md-sys-color-surface-container-highest: #3a3333;
+      }
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      padding: 12px 20px;
+      background: var(--md-sys-color-inverse-surface);
+      color: var(--md-sys-color-inverse-on-surface);
+      border-radius: 0 0 var(--md-sys-shape-corner-small) 0;
+      font-family: var(--md-ref-typeface-plain);
+      clip-path: inset(0 0 100% 0);
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .skip-link:focus-visible {
+      clip-path: inset(0);
+      clip: auto;
+      outline: 2px solid var(--md-sys-color-primary);
+      outline-offset: -2px;
+    }
+
+    .nav-link:focus-visible,
+    .logo:focus-visible {
+      outline: 2px solid var(--md-sys-color-primary);
+      outline-offset: 2px;
+    }
+
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    body, h1, h2, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+
+    ul, ol { padding: 0; list-style: none; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-background);
+      font-family: var(--sans);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+    .appbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in srgb, var(--md-sys-color-surface) 85%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    .appbar .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: var(--md-sys-typescale-title-medium-font);
+      font-weight: var(--md-sys-typescale-title-medium-weight);
+      font-size: var(--md-sys-typescale-title-medium-size);
+      line-height: var(--md-sys-typescale-title-medium-line-height);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .logo .dot { color: var(--md-sys-color-primary); }
+
+    nav { display: flex; gap: 4px; }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: var(--md-sys-shape-corner-small, 8px);
+      font-family: var(--md-sys-typescale-label-large-font);
+      font-weight: var(--md-sys-typescale-label-large-weight);
+      font-size: var(--md-sys-typescale-label-large-size);
+      line-height: var(--md-sys-typescale-label-large-line-height);
+      color: var(--md-sys-color-on-surface-variant);
+      text-decoration: none;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    .nav-link:hover { color: var(--md-sys-color-on-surface); background: color-mix(in srgb, var(--md-sys-color-on-surface) 7%, transparent); }
+
+    .hero { padding: 88px 0 64px; }
+
+    .eyebrow {
+      font-family: var(--md-sys-typescale-label-medium-font);
+      font-weight: var(--md-sys-typescale-label-medium-weight);
+      font-size: var(--md-sys-typescale-label-medium-size);
+      line-height: var(--md-sys-typescale-label-medium-line-height);
+      letter-spacing: 0.05em;
+      color: var(--md-sys-color-tertiary);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      letter-spacing: -0.03em;
+    }
+
+    .typed {
+      margin-top: 16px;
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      color: var(--md-sys-color-secondary);
+      min-height: 1.6em;
+    }
+
+    .typed::after {
+      content: "▌";
+      color: var(--md-sys-color-primary);
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .lead {
+      margin-top: 20px;
+      max-width: 560px;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .actions { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+    section { padding: 72px 0; scroll-margin-top: 88px; }
+
+    section h2 {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      letter-spacing: -0.015em;
+      margin-bottom: 24px;
+    }
+
+    section h2::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      margin-left: 8px;
+    }
+
+    section h2 .hash {
+      color: var(--md-sys-color-primary);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .card {
+      background: var(--md-sys-color-surface-container-low);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: 16px;
+      padding: 24px 28px;
+    }
+
+    .card p {
+      font-family: var(--md-sys-typescale-body-medium-font);
+      font-weight: var(--md-sys-typescale-body-medium-weight);
+      font-size: var(--md-sys-typescale-body-medium-size);
+      line-height: var(--md-sys-typescale-body-medium-line-height);
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    md-chip-set { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    footer {
+      padding: 56px 0 40px;
+      text-align: center;
+      font-family: var(--md-sys-typescale-body-small-font);
+      font-weight: var(--md-sys-typescale-body-small-weight);
+      font-size: var(--md-sys-typescale-body-small-size);
+      line-height: var(--md-sys-typescale-body-small-line-height);
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.45s ease, transform 0.45s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (max-width: 560px) {
+      .hero { padding-top: 56px; }
+      .appbar .wrap { height: auto; padding: 12px 24px; flex-wrap: wrap; gap: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="appbar">
+    <div class="wrap">
+      <a class="logo" href="#top">dazuii<span class="dot">.</span></a>
+      <nav>
+        <a class="nav-link" href="#about">about</a>
+        <a class="nav-link" href="#tools">tools</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="wrap" id="top">
+    <main id="main">
+      <section class="hero">
+        <p class="eyebrow">~/dazuii</p>
+        <h1 class="md-typescale-display-large">dazuii<span style="color:var(--md-sys-color-primary)">.</span></h1>
+        <p class="typed"><span id="typedText"></span></p>
+        <p class="lead md-typescale-body-large">Learning how to reverse engineer things xD</p>
+        <div class="actions">
+          <md-filled-button href="https://github.com/dazui-py" target="_blank" rel="noopener">
+            <md-icon slot="icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+              </svg>
+            </md-icon>
+            GitHub
+          </md-filled-button>
+          <md-outlined-button href="mailto:dazuii@duck.com">
+            <md-icon slot="icon">mail</md-icon>
+            dazuii@duck.com
+          </md-outlined-button>
+        </div>
+      </section>
+
+      <section id="about" class="reveal">
+        <h2 class="md-typescale-headline-medium"><span class="hash">–</span>about</h2>
+        <div class="card">
+          <p>
+            Self-taught dev who builds things for fun. I'm into reverse
+            engineering, low-level programming, and bypassing things.
+          </p>
+        </div>
+      </section>
+
+      <section id="tools" class="reveal">
+        <h2 class="md-typescale-headline-medium"><span class="hash">–</span>tools</h2>
+        <md-chip-set>
+          <md-assist-chip label="Python"></md-assist-chip>
+          <md-assist-chip label="C/C++"></md-assist-chip>
+          <md-assist-chip label="JavaScript"></md-assist-chip>
+          <md-assist-chip label="HTML/CSS"></md-assist-chip>
+          <md-assist-chip label="Git"></md-assist-chip>
+          <md-assist-chip label="Linux"></md-assist-chip>
+          <md-assist-chip label="Neovim"></md-assist-chip>
+        </md-chip-set>
+      </section>
+    </main>
+
+    <footer>
+      <p>© <span id="year"></span> dazuii</p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import "https://cdn.jsdelivr.net/npm/@material/web@2.5.0/common.js/+esm";
+    import {styles as typescaleStyles} from "https://cdn.jsdelivr.net/npm/@material/web@2.5.0/typography/md-typescale-styles.js/+esm";
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+
+  <script>
+    const roles = ["Learning C/C++", "Dev", "Linux"];
+    const typedEl = document.getElementById("typedText");
+    let role = 0, char = 0, deleting = false;
+
+    function tick() {
+      const word = roles[role];
+      typedEl.textContent = word.slice(0, char);
+      if (!deleting) {
+        if (char < word.length) { char++; setTimeout(tick, 90); }
+        else { deleting = true; setTimeout(tick, 1800); }
+      } else {
+        if (char > 0) { char--; setTimeout(tick, 35); }
+        else { deleting = false; role = (role + 1) % roles.length; setTimeout(tick, 250); }
+      }
+    }
+    tick();
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+  </script>
+</body>
+</html>
