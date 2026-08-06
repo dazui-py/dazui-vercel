@@ -1072,6 +1072,19 @@
       renderViews(localCounter());
     })();
 
+    // Keep the counter live: poll the worker every 30s. Only the first visit
+    // POSTs, so this never double-counts; it just refreshes the number shown.
+    if (VIEWS_API) {
+      setInterval(async () => {
+        try {
+          const res = await fetch(VIEWS_API + "/hit?page=fakecrime");
+          if (!res.ok) return;
+          const data = await res.json();
+          renderViews(data.count);
+        } catch (e) {}
+      }, 30000);
+    }
+
     const playBtn = document.getElementById("playBtn");
     const playIcon = document.getElementById("playIcon");
     const trackFill = document.getElementById("trackFill");
@@ -1269,55 +1282,28 @@
       dcNote.hidden = false;
     }
 
-    fetch("https://api.lanyard.rest/v1/users/" + DISCORD_ID)
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success) applyPresence(json.data);
-        else renderNotMonitored();
-      })
-      .catch(() => renderNotMonitored());
+    // Lanyard's WebSocket rejects connections from origins outside its allowlist
+    // (localhost included), which spams console errors. Poll the REST API instead.
+    const POLL_MS = 30000;
+    let havePresence = false;
 
-    let ws = null, heartbeatTimer = null, resubTimer = null;
-
-    function connectWS() {
-      if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
-      try { ws = new WebSocket("wss://api.lanyard.rest/socket"); } catch (e) { return; }
-
-      ws.onopen = () => {
-        ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
-        resubTimer = setInterval(() => {
-          if (ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
-          }
-        }, 30000);
-      };
-
-      ws.onmessage = (e) => {
-        let msg;
-        try { msg = JSON.parse(e.data); } catch (_) { return; }
-        if (msg.op === 0) {
-          const interval = (msg.d && msg.d.heartbeat_interval) || 30000;
-          clearInterval(heartbeatTimer);
-          heartbeatTimer = setInterval(() => {
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
-          }, interval);
-        } else if (msg.op === 1) {
-          if (msg.t === "INIT_STATE") applyPresence(msg.d);
-          else if (msg.t === "PRESENCE_UPDATE") applyPresence(msg.d);
-        } else if (msg.op === 2 && msg.t === "error") {
+    async function pollPresence() {
+      try {
+        const res = await fetch("https://api.lanyard.rest/v1/users/" + DISCORD_ID);
+        const json = await res.json();
+        if (json.success) {
+          havePresence = true;
+          applyPresence(json.data);
+        } else {
           renderNotMonitored();
         }
-      };
-
-      ws.onclose = () => {
-        clearInterval(heartbeatTimer);
-        clearInterval(resubTimer);
-        setTimeout(connectWS, 6000);
-      };
-
-      ws.onerror = () => { try { ws.close(); } catch (_) {} };
+      } catch (_) {
+        if (!havePresence) renderNotMonitored();
+      }
     }
-    connectWS();
+
+    pollPresence();
+    setInterval(pollPresence, POLL_MS);
 
     const spoiler = document.getElementById("spoilerBtn");
     function toggleSpoiler() {
