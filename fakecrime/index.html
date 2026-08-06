@@ -136,6 +136,15 @@
 
     html, body { margin: 0; padding: 0; }
 
+    html {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar {
+      display: none;
+    }
+
     body {
       min-height: 100vh;
       background: var(--md-sys-color-background);
