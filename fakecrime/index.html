@@ -481,6 +481,8 @@
       font-size: 0.85rem;
       line-height: 1.65;
       color: var(--md-sys-color-on-surface-variant);
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .dc-bio strong { color: var(--md-sys-color-on-surface); font-weight: 600; }
@@ -528,12 +530,16 @@
       margin: 0 0 8px;
       font-size: 0.85rem;
       color: var(--md-sys-color-on-surface);
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .dc-tools .tool-line {
       margin: 3px 0;
       font-size: 0.82rem;
       color: var(--md-sys-color-on-surface-variant);
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .tool-line a {
@@ -542,6 +548,14 @@
     }
 
     .tool-line a:hover { text-decoration: underline; }
+
+    .emoji {
+      height: 1.1em;
+      width: 1.1em;
+      margin: 0 0.08em;
+      vertical-align: -0.15em;
+      display: inline-block;
+    }
 
     .activity {
       display: flex;
@@ -960,6 +974,7 @@
     </div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
   <script>
     const DISCORD_ID = "1229788643049209958";
     const VIEWS_API = "https://fakecrime-views.api-dazviews.workers.dev";
@@ -1340,6 +1355,10 @@
     });
 
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    if (window.twemoji) {
+      twemoji.parse(document.body, { folder: "svg", ext: ".svg" });
+    }
   </script>
 </body>
 </html>
