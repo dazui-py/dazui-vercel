@@ -200,7 +200,15 @@
 
     ul, ol { padding: 0; list-style: none; }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar {
+      display: none;
+    }
 
     body {
       background: var(--md-sys-color-background);
@@ -301,6 +309,8 @@
     .actions { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
 
     section { padding: 72px 0; scroll-margin-top: 88px; }
+
+    #tools { padding-top: 40px; }
 
     section h2 {
       display: flex;
